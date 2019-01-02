@@ -1,4 +1,4 @@
-package se.kth.id1212.taskmanagerandroidclient;
+package se.kth.id1212.taskmanagerandroidclient.view;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,13 +10,13 @@ import android.widget.ListView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import se.kth.id1212.taskmanagerandroidclient.R;
 import se.kth.id1212.taskmanagerandroidclient.model.Task;
-import se.kth.id1212.taskmanagerandroidclient.model.TaskManagerServiceGenerator;
-import se.kth.id1212.taskmanagerandroidclient.model.TaskService;
+import se.kth.id1212.taskmanagerandroidclient.net.TaskManagerServiceGenerator;
+import se.kth.id1212.taskmanagerandroidclient.net.TaskService;
 
 public class TaskListFragment extends Fragment {
 

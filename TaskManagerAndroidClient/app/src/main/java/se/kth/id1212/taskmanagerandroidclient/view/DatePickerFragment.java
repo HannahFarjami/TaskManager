@@ -1,4 +1,4 @@
-package se.kth.id1212.taskmanagerandroidclient;
+package se.kth.id1212.taskmanagerandroidclient.view;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -9,6 +9,8 @@ import android.widget.DatePicker;
 
 import java.time.LocalDate;
 import java.util.Calendar;
+
+import se.kth.id1212.taskmanagerandroidclient.R;
 
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {

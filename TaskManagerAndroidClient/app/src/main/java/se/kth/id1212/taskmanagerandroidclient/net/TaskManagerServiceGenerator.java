@@ -1,4 +1,4 @@
-package se.kth.id1212.taskmanagerandroidclient.model;
+package se.kth.id1212.taskmanagerandroidclient.net;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

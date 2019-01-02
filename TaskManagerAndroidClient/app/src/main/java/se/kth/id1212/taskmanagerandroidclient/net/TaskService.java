@@ -1,4 +1,4 @@
-package se.kth.id1212.taskmanagerandroidclient.model;
+package se.kth.id1212.taskmanagerandroidclient.net;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,6 +12,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import se.kth.id1212.taskmanagerandroidclient.model.Task;
 
 public interface TaskService {
 
@@ -33,5 +34,4 @@ public interface TaskService {
 
     @PUT("task/{id}")
     Call<ResponseBody> setTaskAsDone(@Path("id") Long id);
-
 }

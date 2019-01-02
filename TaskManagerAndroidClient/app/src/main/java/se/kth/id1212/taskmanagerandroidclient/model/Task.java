@@ -1,7 +1,8 @@
 package se.kth.id1212.taskmanagerandroidclient.model;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
-import java.time.LocalDate;
 
 public class Task implements Serializable {
 

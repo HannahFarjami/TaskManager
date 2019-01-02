@@ -1,9 +1,7 @@
-package se.kth.id1212.taskmanagerandroidclient;
+package se.kth.id1212.taskmanagerandroidclient.view;
 
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,26 +14,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.time.LocalDate;
 
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import se.kth.id1212.taskmanagerandroidclient.model.Task;
-import se.kth.id1212.taskmanagerandroidclient.model.TaskManagerServiceGenerator;
-import se.kth.id1212.taskmanagerandroidclient.model.TaskService;
+import se.kth.id1212.taskmanagerandroidclient.R;
+import se.kth.id1212.taskmanagerandroidclient.controller.Controller;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private Controller controller;
+    public Controller getController() {
+        return controller;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        controller = new Controller();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -165,6 +164,18 @@ public class MainActivity extends AppCompatActivity
         AddEditTaskFragment addEditTaskFragment = new AddEditTaskFragment();
         fragmentTransaction.replace(R.id.listContainer, addEditTaskFragment);
         fragmentTransaction.addToBackStack(null).commit();
+    }
+
+     public void showError(String message){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Context context = getApplicationContext();
+                int duration = Toast.LENGTH_LONG;
+                Toast toast = Toast.makeText(context, message, duration);
+                toast.show();
+            }
+        });
     }
 
 }

@@ -2,8 +2,8 @@ package se.kth.ID1212.taskManagerRestAPI.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.kth.ID1212.taskManagerRestAPI.domain.Category;
-import se.kth.ID1212.taskManagerRestAPI.domain.Priority;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import se.kth.ID1212.taskManagerRestAPI.domain.Task;
 
 import se.kth.ID1212.taskManagerRestAPI.repository.TaskRepository;
@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 @Service
 public class TaskService {
 
@@ -24,6 +25,9 @@ public class TaskService {
 
     public Task createTask(Map <String, String> body){
         String title = body.get("title");
+        if(title==null||title.length()==0){
+            return null;
+        }
         String description = body.get("description");
         boolean doNow = Boolean.parseBoolean(body.get("doNow"));
         LocalDate dueDate = LocalDate.parse(body.get("dueDate"),formatter);
@@ -67,11 +71,13 @@ public class TaskService {
     public Task updateTask(Task task){
         if(task.getDone()==null)
             task.setDone(false);
+        if(task.getTitle()==null||task.getTitle().length()==0)
+            return null;
         taskRepository.save(task);
         return task;
     }
 
-    public Task setTaskAsDone(Long id)throws Exception{
+    public Task setTaskAsDone(Long id) throws Exception{
         Task task = getTask(id);
         task.setDone(true);
         taskRepository.save(task);

@@ -1,5 +1,4 @@
-package se.kth.id1212.taskmanagerandroidclient;
-import android.app.Activity;
+package se.kth.id1212.taskmanagerandroidclient.view;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,14 +16,14 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import se.kth.id1212.taskmanagerandroidclient.R;
 import se.kth.id1212.taskmanagerandroidclient.model.Task;
-import se.kth.id1212.taskmanagerandroidclient.model.TaskManagerServiceGenerator;
-import se.kth.id1212.taskmanagerandroidclient.model.TaskService;
+import se.kth.id1212.taskmanagerandroidclient.net.TaskManagerServiceGenerator;
+import se.kth.id1212.taskmanagerandroidclient.net.TaskService;
 
 public class TaskListAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<Task> list = new ArrayList<Task>();
@@ -98,7 +97,6 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    System.out.println("are we here");
                     new SendUpdate().execute(getItemId(position));
                 }
             }
