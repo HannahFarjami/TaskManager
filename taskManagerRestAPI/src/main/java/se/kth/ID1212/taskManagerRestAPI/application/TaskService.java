@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestHeader;
 import se.kth.ID1212.taskManagerRestAPI.domain.Task;
 
+import se.kth.ID1212.taskManagerRestAPI.domain.User;
 import se.kth.ID1212.taskManagerRestAPI.repository.TaskRepository;
+import se.kth.ID1212.taskManagerRestAPI.repository.UserRepository;
 
 import java.time.LocalDate;
 
@@ -20,10 +23,12 @@ public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private UserRepository userRepository;
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-    public Task createTask(Map <String, String> body){
+    public Task createTask(String authString, Map <String, String> body){
         String title = body.get("title");
         if(title==null||title.length()==0){
             return null;
@@ -36,12 +41,14 @@ public class TaskService {
         else dueDate = LocalDate.now();
         */
         LocalDate addedDate = LocalDate.parse(body.get("addedDate"),formatter);
-        Task task = new Task(title, description, addedDate, false, doNow,dueDate);
+        User user = userRepository.findByUId(authString);
+        Task task = new Task(title, description, addedDate, false, doNow,dueDate,user.getId());
         taskRepository.save(task);
         return task;
     }
 
-    public List<Task> listTasks(LocalDate startDate, LocalDate endDate, Boolean isDone){
+    public List<Task> listTasks(String authString,LocalDate startDate, LocalDate endDate, Boolean isDone){
+        User user = userRepository.findByUId(authString);
         if(startDate==null && endDate == null && isDone == null){
             return taskRepository.findAll();
         }
@@ -54,41 +61,37 @@ public class TaskService {
             endDate = LocalDate.parse(date,formatter);
         }
         if(isDone == null){
-            return taskRepository.findAllBetweenDueDate(startDate,endDate);
+            return taskRepository.findAllBetweenDueDate(startDate,endDate,user.getId());
         }else{
-            return taskRepository.findAllBetweenDueDateAndIsDone(startDate,endDate,isDone);
+            return taskRepository.findAllBetweenDueDateAndIsDone(startDate,endDate,isDone,user.getId());
         }
     }
 
-    public void deleteTask(Long id){
-        taskRepository.deleteById(id);
+    public void deleteTask(String authString,Long id){
+        User user = userRepository.findByUId(authString);
+        taskRepository.deleteByIdAndUserId(id,user.getId());
     }
 
-    public Task getTask(Long id)throws Exception{
-        return taskRepository.findById(id).orElseThrow(()-> new Exception());
+    public Task getTask(String authString,Long id){
+        User user = userRepository.findByUId(authString);
+        return taskRepository.findByIdAndUserId(id,user.getId());
     }
 
-    public Task updateTask(Task task){
+    public Task updateTask(String authString,Task task){
+        User user = userRepository.findByUId(authString);
         if(task.getDone()==null)
             task.setDone(false);
         if(task.getTitle()==null||task.getTitle().length()==0)
             return null;
+        task.setUserId(user.getId());
         taskRepository.save(task);
         return task;
     }
 
-    public Task setTaskAsDone(Long id) throws Exception{
-        Task task = getTask(id);
+    public Task setTaskAsDone(String authString,Long id){
+        Task task = getTask(authString,id);
         task.setDone(true);
         taskRepository.save(task);
         return task;
-    }
-
-    public List<Task> listTaskToday(){
-        return taskRepository.findAllByDueDate(LocalDate.now());
-    }
-
-    public List<Task> listTaskUpcoming(){
-        return taskRepository.findAllIsNotDueDate(LocalDate.now());
     }
 }

@@ -8,26 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Response;
 import se.kth.id1212.taskmanagerandroidclient.R;
+import se.kth.id1212.taskmanagerandroidclient.controller.APIResponseError;
 import se.kth.id1212.taskmanagerandroidclient.model.Task;
-import se.kth.id1212.taskmanagerandroidclient.net.TaskManagerServiceGenerator;
-import se.kth.id1212.taskmanagerandroidclient.net.TaskService;
 
 public class TaskListFragment extends Fragment {
 
     View rootView;
-
+    MainActivity mainActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LocalDate startDate = (LocalDate) getArguments().getSerializable("START_DATE");
         LocalDate endDate = (LocalDate) getArguments().getSerializable("END_DATE");
         Boolean isDone = getArguments().getBoolean("IS_DONE");
+        mainActivity = (MainActivity) getContext();
 
         new GetTaskList(startDate,endDate,isDone).execute();
         rootView =
@@ -58,20 +57,24 @@ public class TaskListFragment extends Fragment {
 
         @Override
         protected ArrayList<Task> doInBackground(Void... voids) {
-            TaskService taskService = TaskManagerServiceGenerator.createService(TaskService.class);
-            Call<ArrayList<Task>> callSync = taskService.getTasks(startDate,endDate,isDone);
-            Response<ArrayList<Task>> response = null;
+            ArrayList<Task> tasks = null;
             try {
-                response = callSync.execute();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                    tasks = mainActivity.getController().getTasks(startDate,endDate,isDone);
+            }catch (IOException ex){
+                mainActivity.showError("Network problem");
+            }catch (APIResponseError apiError){
+                mainActivity.showError(apiError.getMsg());
             }
-            return response.body();
+            return tasks;
         }
 
         @Override
         protected void onPostExecute(ArrayList<Task> tasks) {
             super.onPostExecute(tasks);
+            if(tasks==null){
+                mainActivity.showError("Network problem, looks like the server is down");
+                return;
+            }
             setList(tasks);
         }
     }

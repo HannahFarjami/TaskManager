@@ -20,8 +20,8 @@ public class TaskController {
     TaskService taskService;
 
     @PostMapping("/task")
-    public ResponseEntity<?> createTask(@RequestBody Map <String, String> body) throws URISyntaxException {
-        Task task = taskService.createTask(body);
+    public ResponseEntity<?> createTask(@RequestHeader(value="Authorization") String authString,@RequestBody Map <String, String> body) throws URISyntaxException {
+        Task task = taskService.createTask(authString,body);
         if (task==null) {
             return new ResponseEntity<>("No title given, add a title", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -29,19 +29,19 @@ public class TaskController {
     }
 
     @PutMapping("/task")
-    public ResponseEntity<?> updateTask(@RequestBody Task task){
-        Task updatedTask = taskService.updateTask(task);
+    public ResponseEntity<?> updateTask(@RequestHeader(value="Authorization") String authString,@RequestBody Task task){
+        Task updatedTask = taskService.updateTask(authString,task);
         if (updatedTask==null) {
             return new ResponseEntity<>("No title given, add a title", HttpStatus.NOT_ACCEPTABLE);
         }
         return ResponseEntity.ok().body(task);
     }
-    
+
     @PutMapping("/task/{id}")
-    public ResponseEntity<?> setTaskAsDone(@PathVariable Long id) throws URISyntaxException {
+    public ResponseEntity<?> setTaskAsDone(@RequestHeader(value="Authorization") String authString,@PathVariable Long id) throws URISyntaxException {
         Task task = null;
         try {
-            task = taskService.setTaskAsDone(id);
+            task = taskService.setTaskAsDone(authString,id);
         }catch (Exception e){
             return ResponseEntity.notFound().build();
         }
@@ -50,10 +50,10 @@ public class TaskController {
 
 
     @GetMapping("/task/{id}")
-    public ResponseEntity<?> viewTask(@PathVariable Long id){
+    public ResponseEntity<?> viewTask(@RequestHeader(value="Authorization") String authString,@PathVariable Long id){
         Task task = null;
         try {
-            task = taskService.getTask(id);
+            task = taskService.getTask(authString,id);
         }catch (Exception e){
             return ResponseEntity.notFound().build();
         }
@@ -61,15 +61,16 @@ public class TaskController {
     }
 
     @GetMapping("/tasks")
-    public List<Task> listAllTasks(@RequestParam(required = false)LocalDate startDate,
+    public List<Task> listAllTasks(@RequestHeader(value="Authorization") String authString,
+                                   @RequestParam(required = false)LocalDate startDate,
                                    @RequestParam(required = false)LocalDate endDate,
                                    @RequestParam(required = false)Boolean isDone){
-        return taskService.listTasks(startDate,endDate,isDone);
+        return taskService.listTasks(authString,startDate,endDate,isDone);
     }
 
     @DeleteMapping("/task/{id}")
-    public void deleteTask(@PathVariable Long id){
-        taskService.deleteTask(id);
+    public void deleteTask(@RequestHeader(value="Authorization") String authString,@PathVariable Long id){
+        taskService.deleteTask(authString,id);
     }
 
 

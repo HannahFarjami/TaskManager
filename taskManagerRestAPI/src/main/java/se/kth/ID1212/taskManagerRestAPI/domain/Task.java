@@ -25,6 +25,7 @@ public class Task {
     private LocalDate addedDate;
     private LocalDate dueDate;
     private Boolean isDone;
+    private Long userId;
 
     //private Category category;
     //private User user;
@@ -35,13 +36,14 @@ public class Task {
     protected Task() {
     }
 
-    public Task(String title, String description, LocalDate addedDate, Boolean isDone, Boolean doNow, LocalDate dueDate) {
+    public Task(String title, String description, LocalDate addedDate, Boolean isDone, Boolean doNow, LocalDate dueDate,Long userId) {
         this.title = title;
         this.description = description;
         this.addedDate = addedDate;
         this.isDone = false;
         this.doNow = doNow;
         this.dueDate = dueDate;
+        this.userId = userId;
     }
 
     public Long getId() {
@@ -98,5 +100,13 @@ public class Task {
 
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

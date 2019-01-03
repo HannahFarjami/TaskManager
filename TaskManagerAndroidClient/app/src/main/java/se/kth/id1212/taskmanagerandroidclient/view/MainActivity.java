@@ -1,6 +1,7 @@
 package se.kth.id1212.taskmanagerandroidclient.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v4.app.FragmentManager;
@@ -22,11 +23,13 @@ import java.time.LocalDate;
 
 import se.kth.id1212.taskmanagerandroidclient.R;
 import se.kth.id1212.taskmanagerandroidclient.controller.Controller;
+import se.kth.id1212.taskmanagerandroidclient.model.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Controller controller;
+
     public Controller getController() {
         return controller;
     }
@@ -34,7 +37,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        controller = new Controller();
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
+        User loggedInUser = (User) bundle.getSerializable("LOGGED_IN_USER");
+
+        controller = new Controller(loggedInUser);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -45,14 +52,6 @@ public class MainActivity extends AppCompatActivity
         date.setText(LocalDate.now().toString());
         setFragment("TODAY");
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new SendAdd().execute();
-            }
-        });*/
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -61,6 +60,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        TextView userName = (TextView) findViewById(R.id.userName);
+        userName.setText(controller.getLoggedInUser().getEmail());
         return true;
     }
 
@@ -100,8 +102,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-
         TextView list = (TextView) findViewById(R.id.list);
         TextView date = (TextView) findViewById(R.id.date);
         if (id == R.id.nav_camera) {
@@ -117,12 +117,11 @@ public class MainActivity extends AppCompatActivity
             date.setText("");
             setFragment("DONE");
         } else if (id == R.id.nav_manage) {
-
-        } /*else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
+            controller.signOut();
+            Intent myIntent = new Intent(this, MainActivity.class);
+            finish();
+            startActivity(myIntent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

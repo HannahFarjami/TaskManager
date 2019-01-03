@@ -17,14 +17,11 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.time.LocalDate;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
+
 import se.kth.id1212.taskmanagerandroidclient.R;
 import se.kth.id1212.taskmanagerandroidclient.controller.APIResponseError;
-import se.kth.id1212.taskmanagerandroidclient.controller.Controller;
 import se.kth.id1212.taskmanagerandroidclient.model.Task;
-import se.kth.id1212.taskmanagerandroidclient.net.TaskManagerServiceGenerator;
-import se.kth.id1212.taskmanagerandroidclient.net.TaskService;
+
 
 public class AddEditTaskFragment extends Fragment {
 
@@ -61,7 +58,6 @@ public class AddEditTaskFragment extends Fragment {
         });
 
         return rootView;
-
     }
 
     private void setValuesForEdit(Task task,View rootView){
@@ -81,14 +77,6 @@ public class AddEditTaskFragment extends Fragment {
         TextView title = (TextView) getActivity().findViewById(R.id.title);
         new SendAddOrEdit((TextView) getActivity().findViewById(R.id.title), (TextView) getActivity().findViewById(R.id.description), (Button) getActivity().findViewById(R.id.datePicker)).execute();
         getFragmentManager().popBackStackImmediate();
-        /* TextView title = (TextView) findViewById(R.id.title);
-        TextView description = (TextView) findViewById(R.id.description);
-        RadioButton doNowBtn = (RadioButton) findViewById(R.id.doNow);
-        boolean doNow = false;
-
-        if(doNowBtn.isChecked()) {doNow = true;}
-
-        Task task = new Task(title.getText().toString(),description.getText().toString(),true,"",null);*/
     }
     private class SendAddOrEdit extends AsyncTask<Void,Void,Void> {
         TextView title;
@@ -115,7 +103,6 @@ public class AddEditTaskFragment extends Fragment {
                 mainActivity.showError(apiError.getMsg());
             }
             return null;
-
         }
 
     }

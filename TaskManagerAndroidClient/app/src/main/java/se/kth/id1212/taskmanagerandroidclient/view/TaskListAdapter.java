@@ -15,19 +15,20 @@ import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
+
 import se.kth.id1212.taskmanagerandroidclient.R;
+import se.kth.id1212.taskmanagerandroidclient.controller.APIResponseError;
 import se.kth.id1212.taskmanagerandroidclient.model.Task;
-import se.kth.id1212.taskmanagerandroidclient.net.TaskManagerServiceGenerator;
-import se.kth.id1212.taskmanagerandroidclient.net.TaskService;
+
 
 public class TaskListAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<Task> list = new ArrayList<Task>();
     private Context context;
+    private MainActivity mainActivity;
     View view;
 
 
@@ -35,6 +36,7 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
     public TaskListAdapter(ArrayList<Task> list, Context context) {
         this.list = list;
         this.context = context;
+
     }
 
     @Override
@@ -109,14 +111,14 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
         @Override
         protected Void doInBackground(Long... longs) {
             Long id = longs[0];
-            TaskService taskService = TaskManagerServiceGenerator.createService(TaskService.class);
-            Call<ResponseBody> call= taskService.setTaskAsDone(id);
+            MainActivity mainActivity = (MainActivity) context;
             try {
-                call.execute();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                mainActivity.getController().setTaskAsDone(id);
+            }catch (IOException ex){
+                mainActivity.showError("Network problem");
+            }catch (APIResponseError apiError){
+                mainActivity.showError(apiError.getMsg());
             }
-
             return null;
         }
     }
@@ -125,14 +127,14 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
         @Override
         protected Void doInBackground(Long... longs) {
             Long id = longs[0];
-            TaskService taskService = TaskManagerServiceGenerator.createService(TaskService.class);
-            Call<ResponseBody> call= taskService.deleteTask(id);
+            MainActivity mainActivity = (MainActivity) context;
             try {
-                call.execute();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                mainActivity.getController().deleteTask(id);
+            }catch (IOException ex){
+                mainActivity.showError("Network problem");
+            }catch (APIResponseError apiError){
+                mainActivity.showError(apiError.getMsg());
             }
-
             return null;
         }
     }
