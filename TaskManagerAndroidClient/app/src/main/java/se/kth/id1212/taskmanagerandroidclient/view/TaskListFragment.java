@@ -13,9 +13,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import se.kth.id1212.taskmanagerandroidclient.R;
-import se.kth.id1212.taskmanagerandroidclient.controller.APIResponseError;
+import se.kth.id1212.taskmanagerandroidclient.net.APIResponseErrorException;
 import se.kth.id1212.taskmanagerandroidclient.model.Task;
 
+
+/**
+ * The fragment that displays the list of tasks for given option(e.g. Today, Upcoming, Done,...)
+ */
 public class TaskListFragment extends Fragment {
 
     View rootView;
@@ -35,6 +39,7 @@ public class TaskListFragment extends Fragment {
         return rootView;
     }
 
+
     void setList(ArrayList<Task> tasks){
         getActivity().runOnUiThread(()->{
             TaskListAdapter adapter = new TaskListAdapter(tasks,getActivity());
@@ -43,6 +48,10 @@ public class TaskListFragment extends Fragment {
         });
     }
 
+    /**
+     * This inner class is responsible for invoke the controller to make api calls for
+     * getting the list of tasks. Runs on a separate thread then the UI thread.
+     */
     private class GetTaskList extends AsyncTask<Void,Void,ArrayList<Task>>{
 
         LocalDate startDate;
@@ -62,7 +71,7 @@ public class TaskListFragment extends Fragment {
                     tasks = mainActivity.getController().getTasks(startDate,endDate,isDone);
             }catch (IOException ex){
                 mainActivity.showError("Network problem");
-            }catch (APIResponseError apiError){
+            }catch (APIResponseErrorException apiError){
                 mainActivity.showError(apiError.getMsg());
             }
             return tasks;

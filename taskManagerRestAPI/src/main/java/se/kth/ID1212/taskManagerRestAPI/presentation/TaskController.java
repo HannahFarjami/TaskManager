@@ -13,6 +13,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Class that is responsible to receive REST api(http) requests for tasks, and to call the right service in the application layer
+ * for processing the request. Implements error handling.
+ */
 @RestController
 public class TaskController {
 
@@ -72,20 +77,4 @@ public class TaskController {
     public void deleteTask(@RequestHeader(value="Authorization") String authString,@PathVariable Long id){
         taskService.deleteTask(authString,id);
     }
-
-
-
-
-/*
-    @GetMapping("/tasks/today")
-    public List<Task> listTaskToday(){
-        return taskService.listTaskToday();
-    }
-
-    @GetMapping("/tasks/upcoming")
-    public List<Task> listTaskUpcoming(){
-        return taskService.listTaskUpcoming();
-    }*/
-
-
 }

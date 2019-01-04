@@ -9,6 +9,9 @@ import se.kth.ID1212.taskManagerRestAPI.application.UserService;
 import se.kth.ID1212.taskManagerRestAPI.domain.User;
 
 
+/**
+ * Class that are responsible for receiving API requests for different user operations
+ */
 @RestController
 public class UserController {
 
@@ -19,7 +22,6 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody User user){
         userService.createUser(user);
         return ResponseEntity.ok().body(user);
-
     }
 
 }

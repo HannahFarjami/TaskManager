@@ -21,10 +21,14 @@ import java.util.ArrayList;
 
 
 import se.kth.id1212.taskmanagerandroidclient.R;
-import se.kth.id1212.taskmanagerandroidclient.controller.APIResponseError;
+import se.kth.id1212.taskmanagerandroidclient.net.APIResponseErrorException;
 import se.kth.id1212.taskmanagerandroidclient.model.Task;
 
 
+/**
+ * This adapter is responsible for making a view, for each item in the task list set.
+ * Defines the operations of the different view objects on the view for each item.
+ */
 public class TaskListAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<Task> list = new ArrayList<Task>();
     private Context context;
@@ -52,7 +56,6 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
     @Override
     public long getItemId(int pos) {
         return list.get(pos).getId();
-        //just return 0 if your list items do not have an Id variable.
     }
 
     @Override
@@ -107,6 +110,10 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
         return view;
     }
 
+
+    /**
+     * Responsible for invoking the controller to set the task as done for the given ID.
+     */
     private class SendUpdate extends AsyncTask<Long,Void,Void>{
         @Override
         protected Void doInBackground(Long... longs) {
@@ -116,13 +123,16 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
                 mainActivity.getController().setTaskAsDone(id);
             }catch (IOException ex){
                 mainActivity.showError("Network problem");
-            }catch (APIResponseError apiError){
+            }catch (APIResponseErrorException apiError){
                 mainActivity.showError(apiError.getMsg());
             }
             return null;
         }
     }
 
+    /**
+     * Responsible for invoking the controller to delete the task with given ID.
+     */
     private class SendDelete extends AsyncTask<Long,Void,Void>{
         @Override
         protected Void doInBackground(Long... longs) {
@@ -132,7 +142,7 @@ public class TaskListAdapter extends BaseAdapter implements ListAdapter {
                 mainActivity.getController().deleteTask(id);
             }catch (IOException ex){
                 mainActivity.showError("Network problem");
-            }catch (APIResponseError apiError){
+            }catch (APIResponseErrorException apiError){
                 mainActivity.showError(apiError.getMsg());
             }
             return null;

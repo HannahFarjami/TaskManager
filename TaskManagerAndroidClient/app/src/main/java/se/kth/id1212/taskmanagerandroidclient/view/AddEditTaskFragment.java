@@ -1,6 +1,5 @@
 package se.kth.id1212.taskmanagerandroidclient.view;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -19,10 +17,13 @@ import java.time.LocalDate;
 
 
 import se.kth.id1212.taskmanagerandroidclient.R;
-import se.kth.id1212.taskmanagerandroidclient.controller.APIResponseError;
+import se.kth.id1212.taskmanagerandroidclient.net.APIResponseErrorException;
 import se.kth.id1212.taskmanagerandroidclient.model.Task;
 
 
+/**
+ * Fragment for creating and edit tasks.
+ */
 public class AddEditTaskFragment extends Fragment {
 
     private Long taskId;
@@ -60,6 +61,13 @@ public class AddEditTaskFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * If the edit button was clicked the fragment should show the fields for the task
+     * as it is before edit.
+     *
+     * @param task to be edited
+     * @param rootView
+     */
     private void setValuesForEdit(Task task,View rootView){
         taskId = task.getId();
         update = true;
@@ -78,6 +86,11 @@ public class AddEditTaskFragment extends Fragment {
         new SendAddOrEdit((TextView) getActivity().findViewById(R.id.title), (TextView) getActivity().findViewById(R.id.description), (Button) getActivity().findViewById(R.id.datePicker)).execute();
         getFragmentManager().popBackStackImmediate();
     }
+
+    /**
+     * This inner class is responsible for invoke the controller to make api calls for
+     * editing or adding tasks. Runs on a separate thread then the UI thread.
+     */
     private class SendAddOrEdit extends AsyncTask<Void,Void,Void> {
         TextView title;
         TextView description;
@@ -99,7 +112,7 @@ public class AddEditTaskFragment extends Fragment {
                 }
             }catch (IOException ex){
                 mainActivity.showError("Network problem");
-            }catch (APIResponseError apiError){
+            }catch (APIResponseErrorException apiError){
                 mainActivity.showError(apiError.getMsg());
             }
             return null;

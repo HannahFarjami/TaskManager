@@ -2,6 +2,9 @@ package se.kth.id1212.taskmanagerandroidclient.model;
 
 import java.io.Serializable;
 
+/**
+ * Represent a user from firebase
+ */
 public class User implements Serializable {
 
     private String email;

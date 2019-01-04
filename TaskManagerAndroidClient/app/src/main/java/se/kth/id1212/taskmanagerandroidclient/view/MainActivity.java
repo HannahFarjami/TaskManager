@@ -3,7 +3,6 @@ package se.kth.id1212.taskmanagerandroidclient.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -17,14 +16,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.time.LocalDate;
-
 
 import se.kth.id1212.taskmanagerandroidclient.R;
 import se.kth.id1212.taskmanagerandroidclient.controller.Controller;
 import se.kth.id1212.taskmanagerandroidclient.model.User;
 
+
+/**
+ * The activity that is used under the complete duration (after sign in) of the application.
+ * Controls all the UI logic and views for the choosen task list, the menu, and the add new
+ * task button.
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity
         TextView date = (TextView) findViewById(R.id.date);
         list.setText("Today");
         date.setText(LocalDate.now().toString());
-        setFragment("TODAY");
+        setTaskListFragment("TODAY");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -107,15 +110,15 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             list.setText("Today");
             date.setText(LocalDate.now().toString());
-            setFragment("TODAY");
+            setTaskListFragment("TODAY");
         } else if (id == R.id.nav_gallery) {
             list.setText("Upcoming");
             date.setText("");
-            setFragment("UPCOMING");
+            setTaskListFragment("UPCOMING");
         } else if (id == R.id.nav_slideshow) {
             list.setText("Done");
             date.setText("");
-            setFragment("DONE");
+            setTaskListFragment("DONE");
         } else if (id == R.id.nav_manage) {
             controller.signOut();
             Intent myIntent = new Intent(this, MainActivity.class);
@@ -128,7 +131,8 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void setFragment(String type){
+
+    private void setTaskListFragment(String type){
         TaskListFragment taskListFragment = new TaskListFragment();
         Bundle bundle = new Bundle();
         switch (type){

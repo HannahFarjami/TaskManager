@@ -19,17 +19,21 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.IOException;
 
 import se.kth.id1212.taskmanagerandroidclient.R;
-import se.kth.id1212.taskmanagerandroidclient.controller.APIResponseError;
+import se.kth.id1212.taskmanagerandroidclient.net.APIResponseErrorException;
 import se.kth.id1212.taskmanagerandroidclient.controller.Controller;
 import se.kth.id1212.taskmanagerandroidclient.model.User;
 
 
+/**
+ * First activity that the user is presented with. Controls all the UI logic and views for creating
+ * and log in to accounts.
+ */
 public class EmailPasswordActivity extends Activity implements View.OnClickListener {
 
     private EditText mEmailField;
     private EditText mPasswordField;
-    FirebaseAuth mAuth;
-    Controller controller;
+    private FirebaseAuth mAuth;
+    private Controller controller;
 
 
     @Override
@@ -40,7 +44,7 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
         // Views
         mEmailField = findViewById(R.id.fieldEmail);
         mPasswordField = findViewById(R.id.fieldPassword);
-
+        // Buttons
         findViewById(R.id.emailSignInButton).setOnClickListener(this);
         findViewById(R.id.emailCreateAccountButton).setOnClickListener(this);
 
@@ -76,7 +80,7 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             User loggedInUser = new User(user.getEmail(),user.getUid());
-                            loggedInSucessfull(loggedInUser);
+                            loggedInSuccessful(loggedInUser);
                         } else {
                             showToast(task.getException().getMessage());
                         }
@@ -84,11 +88,12 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
                 });
     }
 
-    private void showToast(String message){
-        Toast.makeText(EmailPasswordActivity.this, message,
-                Toast.LENGTH_SHORT).show();
-    }
-    private void loggedInSucessfull(User loggedInUser){
+
+    /**
+     * When logged in is successful change to MainActivity and send in the logged in user.
+     * @param loggedInUser is therecently logged in user
+     */
+    private void loggedInSuccessful(User loggedInUser){
         Intent myIntent = new Intent(this, MainActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("LOGGED_IN_USER",loggedInUser);
@@ -96,7 +101,10 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
         startActivity(myIntent);
     }
 
-    // Validates that the user has entered into the required fields.
+    /**
+     * Validates that the user has entered correct info into the required fields.
+     * @return
+     */
     private boolean validateForm() {
         boolean valid = true;
 
@@ -130,6 +138,10 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
         }
     }
 
+    /**
+     * Helper function that can be called so that toasts are being created on UI thread.
+     * @param message to be displayed
+     */
     private void runOnUi(String message){
         runOnUiThread(new Runnable() {
             @Override
@@ -138,7 +150,14 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
             }
         });
     }
+    private void showToast(String message){
+        Toast.makeText(EmailPasswordActivity.this, message,
+                Toast.LENGTH_SHORT).show();
+    }
 
+    /**
+     * Doing API rest calls on another thread then the UI thread.
+     */
     private class CreateAccount extends AsyncTask<String,Void,Void> {
 
         @Override
@@ -147,7 +166,7 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
                 controller.createAccount(strings[0], strings[1]);
             }catch(IOException ex){
                 runOnUi("Network problem");
-            }catch (APIResponseError ex){
+            }catch (APIResponseErrorException ex){
                 runOnUi(ex.getMsg());
             }
             runOnUi("Account created");

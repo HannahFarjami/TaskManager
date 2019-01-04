@@ -7,6 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import se.kth.ID1212.taskManagerRestAPI.domain.User;
 import se.kth.ID1212.taskManagerRestAPI.repository.UserRepository;
 
+
+/**
+ * This class is responsible for serving the requests given from the presentation layer regarding users.
+ */
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 @Service
 public class UserService {

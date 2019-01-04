@@ -7,6 +7,11 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
+/**
+ * Reusable service generator that constructs the retrofit object so we can reuse the same object
+ * the whole lifetime of the application.
+ */
 public class TaskManagerServiceGenerator {
     private static final String BASE_URL = "http://192.168.1.88:8080/";
     private static Gson gson = new GsonBuilder()

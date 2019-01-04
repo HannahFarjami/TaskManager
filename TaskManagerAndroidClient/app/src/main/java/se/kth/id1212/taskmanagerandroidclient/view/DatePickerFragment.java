@@ -12,6 +12,9 @@ import java.util.Calendar;
 
 import se.kth.id1212.taskmanagerandroidclient.R;
 
+/**
+ * Fragment dialog for the user to choose date for task.
+ */
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 

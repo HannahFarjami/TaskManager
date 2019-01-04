@@ -1,9 +1,11 @@
 package se.kth.id1212.taskmanagerandroidclient.model;
 
-import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
+/**
+ * Represent a task object that is sent and received to and from the API rest calls.
+ */
 public class Task implements Serializable {
 
     private Long id;

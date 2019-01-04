@@ -1,17 +1,18 @@
 package se.kth.ID1212.taskManagerRestAPI.domain;
 
 
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-
 import java.time.LocalDate;
 
 
+/**
+ * Represent a table called task in a relationship database, created by JPA.
+ */
 @Entity
 public class Task {
 
@@ -26,12 +27,6 @@ public class Task {
     private LocalDate dueDate;
     private Boolean isDone;
     private Long userId;
-
-    //private Category category;
-    //private User user;
-
-
-
 
     protected Task() {
     }

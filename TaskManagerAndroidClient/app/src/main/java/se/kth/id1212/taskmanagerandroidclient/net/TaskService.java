@@ -16,6 +16,9 @@ import retrofit2.http.Query;
 import se.kth.id1212.taskmanagerandroidclient.model.Task;
 import se.kth.id1212.taskmanagerandroidclient.model.User;
 
+/**
+ * Interface that retrofit uses to create all the HTTP requests.
+ */
 public interface TaskService {
 
     @GET("tasks")

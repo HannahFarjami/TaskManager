@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+
+/**
+ * Represent a table called user in a relationship database, created by JPA.
+ */
 @Entity
 public class User {
 

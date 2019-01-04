@@ -12,6 +12,10 @@ import se.kth.ID1212.taskManagerRestAPI.domain.Task;
 import java.time.LocalDate;
 import java.util.List;
 
+
+/**
+ * Interface for making database calls.
+ */
 @Repository
 @Transactional(propagation = Propagation.MANDATORY)
 public interface TaskRepository extends JpaRepository<Task,Long> {

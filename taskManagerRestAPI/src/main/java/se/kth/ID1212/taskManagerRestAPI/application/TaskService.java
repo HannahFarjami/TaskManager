@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestHeader;
 import se.kth.ID1212.taskManagerRestAPI.domain.Task;
 
 import se.kth.ID1212.taskManagerRestAPI.domain.User;
@@ -17,6 +16,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * This class is responsible for serving the requests given from the presentation layer regarding tasks.
+ * Does error handling.
+ */
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 @Service
 public class TaskService {
@@ -36,10 +40,6 @@ public class TaskService {
         String description = body.get("description");
         boolean doNow = Boolean.parseBoolean(body.get("doNow"));
         LocalDate dueDate = LocalDate.parse(body.get("dueDate"),formatter);
-        /*
-        if(!doNow) dueDate = LocalDate.parse(body.get("dueDate"),formatter);
-        else dueDate = LocalDate.now();
-        */
         LocalDate addedDate = LocalDate.parse(body.get("addedDate"),formatter);
         User user = userRepository.findByUId(authString);
         Task task = new Task(title, description, addedDate, false, doNow,dueDate,user.getId());

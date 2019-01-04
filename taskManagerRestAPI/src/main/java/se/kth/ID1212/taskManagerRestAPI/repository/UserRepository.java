@@ -6,6 +6,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import se.kth.ID1212.taskManagerRestAPI.domain.User;
 
+
+/**
+ * Interface for making database calls.
+ */
 @Repository
 @Transactional(propagation = Propagation.MANDATORY)
 public interface UserRepository extends JpaRepository<User,Long> {
